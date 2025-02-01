@@ -10,11 +10,11 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 options = Options()
+options.add_argument("--headless")
 driver = webdriver.Chrome(options=options)
 driver.get("https://www.quebec.ca/en/health/health-system-and-services/service-organization/quebec-health-system-and-its-services/situation-in-emergency-rooms-in-quebec#situation-urgences-tab1")
 
 all_hospitals = []
-
 # Function to scrape hospital data from the current page
 def scrape_hospital_data():
     hospital_elements = driver.find_elements(By.XPATH, "//*[contains(@class, 'hospital_element')]")
@@ -108,10 +108,14 @@ while True:
     if not go_to_next_page():
         break  
 
-clean_up()
 
-# Save data to JSON
-with open("ConUHacksIX/WebScraper/Hospitals_Data.json", "w", encoding="utf-8") as f:
-    json.dump(all_hospitals, f, indent=4)
+# Save data to a JSON file
+output_file = "hospital_data.json"
+with open(output_file, "w", encoding="utf-8") as file:
+    json.dump(all_hospitals, file, indent=4, ensure_ascii=False)
 
 print("Scraping complete")
+
+clean_up()
+
+
