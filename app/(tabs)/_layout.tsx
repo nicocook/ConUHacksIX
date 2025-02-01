@@ -28,6 +28,9 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <House color={color} />,
         }}
       />
+      <Tabs.Screen
+        name="ai_doctor"
+      />
     </Tabs>
   );
 }
