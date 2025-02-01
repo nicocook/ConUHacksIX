@@ -2,7 +2,7 @@ import { Tabs } from "expo-router";
 import React from "react";
 import { Platform } from "react-native";
 
-import { House } from "lucide-react-native";
+import { CalendarClock, Hospital, Sparkles } from "lucide-react-native";
 
 export default function TabLayout() {
   return (
@@ -24,12 +24,23 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "index page",
-          tabBarIcon: ({ color }) => <House color={color} />,
+          title: "",
+          tabBarIcon: ({ color }) => <Hospital color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="schedule"
+        options={{
+          title: "",
+          tabBarIcon: ({ color }) => <CalendarClock color={color} />,
         }}
       />
       <Tabs.Screen
         name="ai_doctor"
+        options={{
+          title: "",
+          tabBarIcon: ({ color }) => <Sparkles color={color} />,
+        }}
       />
     </Tabs>
   );
