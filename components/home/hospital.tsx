@@ -1,7 +1,7 @@
 import { Bed, Clock, CornerUpRight } from "lucide-react-native";
-import { View, Text, Image, Pressable } from "react-native";
-import * as Progress from "react-native-progress";
+import { View, Text, Pressable } from "react-native";
 import CircularProgress from "./circular_progress";
+import { hospitalData } from "./types";
 
 export default function Hospital({
   data,
@@ -10,9 +10,11 @@ export default function Hospital({
   data: hospitalData;
   onPress: () => void;
 }) {
-  if (data === null) {
-    return <View></View>;
+  if (!data) {
+    return <View />;
   }
+
+  const [waitHours, waitMinutes] = data.details.estimated_waiting_time.split(":");
 
   return (
     <Pressable onPress={onPress}>
@@ -28,22 +30,21 @@ export default function Hospital({
           backgroundColor: "white",
         }}
       >
+        {/* Top section with progress indicator, hospital name and address */}
         <View
           style={{
             flexDirection: "row",
-            //width: "100%",
             alignItems: "center",
             gap: 10,
           }}
         >
           <CircularProgress
-            hours={+data.details.estimated_waiting_time.split(":")[0]}
-            minutes={+data.details.estimated_waiting_time.split(":")[1]}
+            hours={+waitHours}
+            minutes={+waitMinutes}
             size={80}
             strokeWidth={10}
             textStyle={{ fontSize: 24, color: "black" }}
           />
-          {/* name, address and logo */}
           <View style={{ flexDirection: "column" }}>
             <Text
               style={{
@@ -59,13 +60,15 @@ export default function Hospital({
             </Text>
           </View>
         </View>
-        {/* time to get there field */}
+
+        {/* Row for travel time/distance and estimated waiting time */}
         <View
           style={{
             flexDirection: "row",
             justifyContent: "space-evenly",
           }}
         >
+          {/* Travel time/distance field */}
           <View
             style={{
               flexDirection: "row",
@@ -74,10 +77,14 @@ export default function Hospital({
             }}
           >
             <CornerUpRight color={"black"} />
-            <Text style={{ fontWeight: 600, fontSize: 16 }}>
-              {data.details.estimated_waiting_time}
+            <Text style={{ fontWeight: "600", fontSize: 16 }}>
+              {data.travelTime ? data.travelTime : "N/A"}
+              {data.distance && data.distance !== Infinity
+                ? ` (${data.distance.toFixed(1)} km)`
+                : ""}
             </Text>
           </View>
+
           {/* Estimated wait time field */}
           <View
             style={{
@@ -87,12 +94,13 @@ export default function Hospital({
             }}
           >
             <Clock color={"black"} />
-            <Text style={{ fontWeight: 600, fontSize: 16 }}>
-              {+data.details.estimated_waiting_time.split(":")[0] + " hours"}
+            <Text style={{ fontWeight: "600", fontSize: 16 }}>
+              {+waitHours + " hours"}
             </Text>
           </View>
         </View>
-        {/* Capacity field */}
+
+        {/* Stretcher capacity field */}
         <View
           style={{
             alignSelf: "center",
@@ -102,13 +110,13 @@ export default function Hospital({
             backgroundColor:
               +data.details.stretcher_occupancy_rate.split("%")[0] >= 100
                 ? "#fee2e2"
-                : "",
+                : undefined,
             borderRadius: 20,
             paddingHorizontal: 6,
           }}
         >
           <Bed color={"black"} />
-          <Text style={{ fontWeight: 600, fontSize: 16 }}>
+          <Text style={{ fontWeight: "600", fontSize: 16 }}>
             Stretcher capacity: {data.details.stretcher_occupancy_rate}
           </Text>
         </View>
