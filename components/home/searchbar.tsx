@@ -27,7 +27,7 @@ export default function SearchBar() {
           flexDirection: "row",
           alignItems: "center",
           borderRadius: 20,
-          backgroundColor: "#e4e4e7",
+          backgroundColor: "white",
         }}
       >
         <Search color={"black"} />
@@ -44,7 +44,7 @@ export default function SearchBar() {
       </View>
       <Pressable
         style={{
-          backgroundColor: "#e4e4e7",
+          backgroundColor: "white",
           height: 40,
           width: 40,
           alignItems: "center",
