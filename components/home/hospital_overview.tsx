@@ -7,6 +7,7 @@ import {
   Animated,
 } from "react-native";
 import { hospitalData } from "./types";
+import { Linking } from "react-native";
 
 export default function HospitalOverview({
   hospitalData,
@@ -16,6 +17,16 @@ export default function HospitalOverview({
   const occupancyRateNumeric = parseFloat(
     hospitalData.details.stretcher_occupancy_rate.replace("%", "")
   );
+  
+  const openMaps = () => {
+    const addressForMap = hospitalData.details.address.replace(/\n/g, ", ");
+    const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(addressForMap)}`;
+    Linking.openURL(url).catch((err) =>
+      console.error("Error opening maps:", err)
+    );
+  };
+  
+
 
   // Determine load status
   const getLoadStatus = (rate: number) => {
@@ -128,26 +139,14 @@ export default function HospitalOverview({
               paddingHorizontal: 20,
               borderRadius: 8,
             }}
-            onPress={() => console.log("Map Pressed")}
+            onPress={openMaps}
           >
             <Text style={{ color: "white", fontSize: 16, fontWeight: "600" }}>
               Map
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity
-            style={{
-              backgroundColor: "#1E90FF",
-              paddingVertical: 10,
-              paddingHorizontal: 20,
-              borderRadius: 8,
-            }}
-            onPress={() => console.log("Website Pressed")}
-          >
-            <Text style={{ color: "white", fontSize: 16, fontWeight: "600" }}>
-              Website
-            </Text>
-          </TouchableOpacity>
+
         </View>
       </View>
 

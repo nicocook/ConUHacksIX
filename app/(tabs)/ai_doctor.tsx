@@ -20,7 +20,7 @@ interface ChatMessage {
   content: string;
 }
 
-const OPENAI_API_KEY = "";
+const git = "";
 const USER_ORIGIN = "Concordia University, Montreal, QC";
 
 async function getTravelTime(
