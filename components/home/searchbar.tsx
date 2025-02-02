@@ -1,17 +1,13 @@
 import { Search, SlidersHorizontal } from "lucide-react-native";
-import {
-  View,
-  Text,
-  TextInput,
-  SafeAreaView,
-  Button,
-  Pressable,
-  NativeSyntheticEvent,
-  TextInputChangeEventData,
-} from "react-native";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import { View, TextInput, Pressable } from "react-native";
 
-export default function SearchBar({ handleChange, searchValue }) {
+export default function SearchBar({
+  handleChange,
+  searchValue,
+}: {
+  searchValue: string;
+  handleChange: (value: React.SetStateAction<string>) => void;
+}) {
   return (
     <View
       style={{
@@ -40,9 +36,8 @@ export default function SearchBar({ handleChange, searchValue }) {
             width: "85%",
           }}
           value={searchValue}
-          onChange={handleChange}
+          onChangeText={handleChange}
           placeholder="Search"
-          keyboardType="numeric"
         />
       </View>
       <Pressable
