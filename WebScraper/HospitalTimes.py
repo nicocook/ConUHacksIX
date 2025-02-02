@@ -109,12 +109,21 @@ while True:
         break  
 
 
-# Save data to a JSON file
-output_file = "hospital_data.json"
-with open(output_file, "w", encoding="utf-8") as file:
-    json.dump(all_hospitals, file, indent=4, ensure_ascii=False)
+output_file = "hospital_data.ts"
 
-print("Scraping complete")
+# Convert JSON to TypeScript
+json_data = json.dumps(all_hospitals, indent=4, ensure_ascii=False)
+
+ts_content = "export const data = " + json_data.replace('"name":', 'name:') \
+                                              .replace('"details":', 'details:') \
+                                              .replace('"address":', 'address:') \
+                                              .replace('"estimated_waiting_time":', 'estimated_waiting_time:') \
+                                              .replace('"people_waiting_to_see_doctor":', 'people_waiting_to_see_doctor:') \
+                                              .replace('"total_people_in_emergency_room":', 'total_people_in_emergency_room:') \
+                                              .replace('"stretcher_occupancy_rate":', 'stretcher_occupancy_rate:') + ";"
+
+with open(output_file, "w", encoding="utf-8") as file:
+    file.write(ts_content)
 
 clean_up()
 
