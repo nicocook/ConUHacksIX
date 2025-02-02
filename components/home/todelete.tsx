@@ -1,4 +1,3 @@
-import HospitalOverview from "@/components/home/hospital_overview";
 import {
   Actionsheet,
   ActionsheetContent,
@@ -10,7 +9,7 @@ import {
 } from "@/components/ui/actionsheet";
 import { Button, ButtonText } from "@/components/ui/button";
 import React from "react";
-import { View, Text } from "react-native";
+import { View } from "react-native";
 
 export default function App() {
   const [showActionsheet, setShowActionsheet] = React.useState(false);
@@ -23,12 +22,24 @@ export default function App() {
       <Actionsheet isOpen={showActionsheet} onClose={handleClose}>
         <ActionsheetBackdrop />
         <ActionsheetContent>
-          <ActionsheetDragIndicatorWrapper>
+          {/* <ActionsheetDragIndicatorWrapper>
             <ActionsheetDragIndicator />
           </ActionsheetDragIndicatorWrapper>
-          <View className="h-5/6">
-            <HospitalOverview />
-          </View>
+          <ActionsheetItem onPress={handleClose}>
+            <ActionsheetItemText>Edit Message</ActionsheetItemText>
+          </ActionsheetItem>
+          <ActionsheetItem onPress={handleClose}>
+            <ActionsheetItemText>Mark Unread</ActionsheetItemText>
+          </ActionsheetItem>
+          <ActionsheetItem onPress={handleClose}>
+            <ActionsheetItemText>Remind Me</ActionsheetItemText>
+          </ActionsheetItem>
+          <ActionsheetItem onPress={handleClose}>
+            <ActionsheetItemText>Add to Saved Items</ActionsheetItemText>
+          </ActionsheetItem>
+          <ActionsheetItem isDisabled onPress={handleClose}>
+            <ActionsheetItemText>Delete</ActionsheetItemText>
+          </ActionsheetItem> */}
         </ActionsheetContent>
       </Actionsheet>
     </View>

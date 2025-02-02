@@ -10,7 +10,8 @@ const CircularProgress = ({
   backgroundColor = "#eee",
   textStyle = {},
 }) => {
-  const hoursNew = hours + minutes / 60;
+  let hoursNew = hours + minutes / 60;
+  hoursNew = hoursNew >= 10 ? 10 : hoursNew;
   const progressFiltered = (hoursNew / 10) * 100;
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
