@@ -39,14 +39,17 @@ export default function Hospital({
             gap: 10,
           }}
         >
-          <CircularProgress
-            hours={+waitHours}
-            minutes={+waitMinutes}
-            size={80}
-            strokeWidth={10}
-            textStyle={{ fontSize: 24, color: "black" }}
-          />
-          <View style={{ flexDirection: "column" }}>
+          <View className="flex-col items-center">
+            <CircularProgress
+              hours={+waitHours}
+              minutes={+waitMinutes}
+              size={80}
+              strokeWidth={10}
+              textStyle={{ fontSize: 24, color: "black" }}
+            />
+            <Text className="w-20 text-center">Est. wait time</Text>
+          </View>
+          <View className="flex-col gap-1">
             <Text
               style={{
                 fontSize: 18,
@@ -57,7 +60,10 @@ export default function Hospital({
               {data.name}
             </Text>
             <Text style={{ width: 240 }}>
-              {data.details.address.split(",").slice(0, 2).join(",")}
+              {
+                //data.details.address.split(",").slice(0, 2).join(",")
+                data.details.address.split("\n")[0]
+              }
             </Text>
           </View>
         </View>
@@ -88,7 +94,7 @@ export default function Hospital({
           </View>
 
           {/* Estimated wait time field */}
-          <View
+          {/* <View
             style={{
               flexDirection: "row",
               alignItems: "center",
@@ -99,7 +105,7 @@ export default function Hospital({
             <Text style={{ fontWeight: "600", fontSize: 16 }}>
               {+waitHours + " hours"}
             </Text>
-          </View>
+          </View> */}
         </View>
 
         {/* Stretcher capacity field */}

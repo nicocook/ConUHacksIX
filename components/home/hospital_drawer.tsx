@@ -20,13 +20,13 @@ export default function HospitalDrawer({
   hospitalData: hospitalData;
 }) {
   return (
-    <Actionsheet isOpen={showActionsheet} onClose={handleClose}>
+    <Actionsheet isOpen={showActionsheet} onClose={handleClose} className="">
       <ActionsheetBackdrop />
       <ActionsheetContent>
         <ActionsheetDragIndicatorWrapper>
           <ActionsheetDragIndicator />
         </ActionsheetDragIndicatorWrapper>
-        <View className="h-5/6">
+        <View className="-h-screen-safe-offset-20">
           <HospitalOverview hospitalData={hospitalData} />
         </View>
       </ActionsheetContent>

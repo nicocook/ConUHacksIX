@@ -233,7 +233,7 @@ export default function ChatScreen(): JSX.Element {
   };
 
   return (
-    <View className="h-screen">
+    <View className="h-screen-safe-offset-4">
       <KeyboardAvoidingView
         style={styles.container}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
@@ -282,8 +282,6 @@ const styles = StyleSheet.create({
     height: 200,
     flex: 1,
     backgroundColor: "#f0f4f7",
-    //borderWidth: 2,
-    //marginBottom: 84,
   },
   messagesContainer: {
     flex: 1,

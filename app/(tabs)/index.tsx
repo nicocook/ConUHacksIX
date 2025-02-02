@@ -1,6 +1,11 @@
 import Hospitals from "@/components/home/hospitals";
 import SearchBar from "@/components/home/searchbar";
-import { Text, View } from "react-native";
+import {
+  NativeSyntheticEvent,
+  Text,
+  TextInputChangeEventData,
+  View,
+} from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { data } from "@/hospital_data";
 import {
@@ -26,7 +31,25 @@ export default function Index() {
       stretcher_occupancy_rate: "",
     },
   });
+  const [searchValue, setSearchValue] = useState("");
   const handleClose = () => setShowActionsheet(false);
+
+  const updateSearch = (value: React.SetStateAction<string>) => {
+    console.log(data);
+    // getFriendsForUser(user!.id).then((isFriend) => {
+    //   console.log("friends", isFriend);
+    // });
+    // setSearch(value);
+
+    // if (value) {
+    //   const filtered = data.filter((user: User) =>
+    //     user.username.toLowerCase().includes(value.toString().toLowerCase())
+    //   );
+    //   setFilteredData(filtered);
+    // } else {
+    //   setFilteredData(data);
+    // }
+  };
   return (
     <View
       style={{
@@ -37,7 +60,7 @@ export default function Index() {
         gap: 20,
       }}
     >
-      <SearchBar />
+      <SearchBar handleChange={updateSearch} searchValue={searchValue} />
       <Hospitals
         data={data}
         onPress={() => setShowActionsheet(true)}

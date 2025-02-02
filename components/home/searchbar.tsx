@@ -6,10 +6,12 @@ import {
   SafeAreaView,
   Button,
   Pressable,
+  NativeSyntheticEvent,
+  TextInputChangeEventData,
 } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
-export default function SearchBar() {
+export default function SearchBar({ handleChange, searchValue }) {
   return (
     <View
       style={{
@@ -37,7 +39,8 @@ export default function SearchBar() {
             padding: 10,
             width: "85%",
           }}
-          //value={}
+          value={searchValue}
+          onChange={handleChange}
           placeholder="Search"
           keyboardType="numeric"
         />

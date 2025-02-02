@@ -7,11 +7,9 @@ export default function HospitalOverview({
 }: {
   hospitalData: hospitalData;
 }) {
-
   const occupancyRateNumeric = parseFloat(
     hospitalData.details.stretcher_occupancy_rate.replace("%", "")
   );
-  
 
   // 2. Create a function or inline logic to pick the status
   const getLoadStatus = (rate: number) => {
@@ -26,17 +24,18 @@ export default function HospitalOverview({
 
   const getLoadColor = (rate: number) => {
     if (rate > 120) {
-      return "red";     // heavy
+      return "red"; // heavy
     } else if (rate >= 80 && rate <= 120) {
-      return "orange";  // moderate
+      return "orange"; // moderate
     } else {
-      return "green";   // low
+      return "green"; // low
     }
   };
   const loadColor = getLoadColor(occupancyRateNumeric);
 
   return (
     <ScrollView
+      //className="h-8"
       style={{
         flex: 1,
         backgroundColor: "#fff",
@@ -137,7 +136,7 @@ export default function HospitalOverview({
             fontSize: 14,
             fontWeight: "bold",
             marginBottom: 20,
-            color: loadColor
+            color: loadColor,
           }}
         >
           Hospital is experiencing {getLoadStatus(occupancyRateNumeric)}.
