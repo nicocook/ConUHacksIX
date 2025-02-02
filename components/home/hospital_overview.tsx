@@ -1,5 +1,11 @@
-import React from "react";
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import React, { useRef, useEffect } from "react";
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Animated,
+} from "react-native";
 import { hospitalData } from "./types";
 
 export default function HospitalOverview({
@@ -11,7 +17,7 @@ export default function HospitalOverview({
     hospitalData.details.stretcher_occupancy_rate.replace("%", "")
   );
 
-  // 2. Create a function or inline logic to pick the status
+  // Determine load status
   const getLoadStatus = (rate: number) => {
     if (rate > 120) {
       return "heavy load";
@@ -22,6 +28,7 @@ export default function HospitalOverview({
     }
   };
 
+  // Determine load color
   const getLoadColor = (rate: number) => {
     if (rate > 120) {
       return "red"; // heavy
@@ -31,21 +38,52 @@ export default function HospitalOverview({
       return "green"; // low
     }
   };
+
+  const loadStatus = getLoadStatus(occupancyRateNumeric);
   const loadColor = getLoadColor(occupancyRateNumeric);
 
+  // 1) Create animated values for scale and opacity
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+  const opacityAnim = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    // 2) Create a pulsing animation that changes both scale and opacity in parallel
+    Animated.loop(
+      Animated.sequence([
+        Animated.parallel([
+          Animated.timing(scaleAnim, {
+            toValue: 1.2,
+            duration: 1800,
+            useNativeDriver: true,
+          }),
+          Animated.timing(opacityAnim, {
+            toValue: 0.4, 
+            duration: 700,
+            useNativeDriver: true,
+          }),
+        ]),
+        Animated.parallel([
+          Animated.timing(scaleAnim, {
+            toValue: 1,
+            duration: 700,
+            useNativeDriver: true,
+          }),
+          Animated.timing(opacityAnim, {
+            toValue: 1, 
+            duration: 700,
+            useNativeDriver: true,
+          }),
+        ]),
+      ])
+    ).start();
+  }, [scaleAnim, opacityAnim]);
+
   return (
-    <ScrollView
-      //className="h-8"
-      style={{
-        flex: 1,
-        backgroundColor: "#fff",
-      }}
-    >
+    <ScrollView style={{ flex: 1, backgroundColor: "#fff" }}>
       {/* Top Header Section (Dark Blue Background) */}
       <View
-        className="rounded-xl"
         style={{
-          backgroundColor: "#22417F", // A navy-ish blue
+          backgroundColor: "#22417F",
           paddingVertical: 40,
           paddingHorizontal: 20,
           alignItems: "center",
@@ -123,24 +161,36 @@ export default function HospitalOverview({
           borderStartStartRadius: 25,
         }}
       >
-        <Text
-          style={{
-            fontSize: 36,
-            fontWeight: "600",
-          }}
-        >
+        <Text style={{ fontSize: 36, fontWeight: "600" }}>
           Current Situation
         </Text>
-        <Text
+
+        {/* Status with pulsing circle */}
+        <View
           style={{
-            fontSize: 14,
-            fontWeight: "bold",
+            flexDirection: "row",
+            alignItems: "center",
             marginBottom: 20,
-            color: loadColor,
+            marginTop: 10,
           }}
         >
-          Hospital is experiencing {getLoadStatus(occupancyRateNumeric)}.
-        </Text>
+          <Animated.View
+            style={{
+              width: 10,
+              height: 10,
+              borderRadius: 5,
+              backgroundColor: loadColor,
+              marginRight: 8,
+              // 3) Apply the scale and opacity animations
+              transform: [{ scale: scaleAnim }],
+              opacity: opacityAnim,
+            }}
+          />
+          <Text style={{ fontSize: 14, fontWeight: "bold", color: loadColor }}>
+            Hospital is experiencing {loadStatus}.
+          </Text>
+        </View>
+
         {/* Cards Container (2 x 2) */}
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 10 }}>
           {/* Card 1: Hospital Capacity */}
@@ -175,6 +225,7 @@ export default function HospitalOverview({
             </Text>
           </View>
 
+          {/* Card 2: Average Wait Time */}
           <View
             style={{
               width: "47%",
@@ -207,10 +258,9 @@ export default function HospitalOverview({
             >
               Average wait time
             </Text>
-            <Text style={{ color: "white" }}></Text>
           </View>
 
-          {/* Card 2: Waiting to see a doctor */}
+          {/* Card 3: People Waiting to see a Doctor */}
           <View
             style={{
               width: "47%",
@@ -231,19 +281,12 @@ export default function HospitalOverview({
             >
               {hospitalData.details.people_waiting_to_see_doctor + " people"}
             </Text>
-            <Text
-              style={{
-                color: "white",
-                textAlign: "center",
-                fontSize: 20,
-              }}
-            >
+            <Text style={{ color: "white", textAlign: "center", fontSize: 20 }}>
               waiting to see a doctor
             </Text>
-            <Text style={{ color: "white" }}></Text>
           </View>
 
-          {/* Card 3: People in Urgent Care */}
+          {/* Card 4: Total People in Emergency Rooms */}
           <View
             style={{
               width: "47%",
@@ -264,50 +307,10 @@ export default function HospitalOverview({
             >
               {hospitalData.details.total_people_in_emergency_room + " people"}
             </Text>
-            <Text
-              style={{
-                color: "white",
-                textAlign: "center",
-                fontSize: 20,
-              }}
-            >
+            <Text style={{ color: "white", textAlign: "center", fontSize: 20 }}>
               in emergency rooms
             </Text>
-            <Text style={{ color: "white" }}></Text>
           </View>
-
-          {/* Card 4: Total in Emergency Room */}
-          {/* <View
-            style={{
-              width: "47%",
-              backgroundColor: "#1E3A8A",
-              borderRadius: 10,
-              padding: 15,
-            }}
-          >
-            <Text
-              style={{
-                color: "white",
-                fontSize: 26,
-                fontWeight: "700",
-                marginBottom: 5,
-                height: 38,
-                textAlign: "center",
-              }}
-            >
-              {hospitalData.details.people_waiting_to_see_doctor + " people"}
-            </Text>
-            <Text
-              style={{
-                color: "white",
-                textAlign: "center",
-                fontSize: 20,
-              }}
-            >
-              waiting for emergeny room
-            </Text>
-            <Text style={{ color: "white" }}></Text>
-          </View> */}
         </View>
       </View>
     </ScrollView>
