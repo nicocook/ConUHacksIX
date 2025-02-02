@@ -27,6 +27,7 @@ async function getTravelTime(
   origin: string,
   destination: string
 ): Promise<number> {
+  const OPENAI_API_KEY=""
   const GOOGLE_API_KEY = "";
   const url = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${encodeURIComponent(
     origin
