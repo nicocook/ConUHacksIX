@@ -206,7 +206,7 @@ export default function HospitalOverview({
                 marginBottom: 10,
               }}
             >
-              Average wait
+              Average wait time
             </Text>
             <Text style={{ color: "white" }}></Text>
           </View>

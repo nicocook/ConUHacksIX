@@ -54,10 +54,11 @@ const CircularProgress = ({
       </Svg>
 
       {/* Percentage Text */}
-      <View style={[StyleSheet.absoluteFill, styles.textContainer]}>
+      <View style={[StyleSheet.absoluteFill, styles.textContainer]
+      }>
         {/* <Text style={[styles.text, textStyle]}>{Math.round(progress)}%</Text> */}
         <Text style={[styles.text, textStyle]}>{hours}h</Text>
-        <Text style={{ fontSize: 14, color: "black" }}>{minutes + " "}min</Text>
+        <Text style={{ fontSize: 14, color: "black", marginTop: -8}}>{minutes + " "}min</Text>
       </View>
     </View>
   );
