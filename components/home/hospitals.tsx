@@ -3,7 +3,6 @@ import Hospital from "./hospital";
 import { useEffect, useState } from "react";
 
 export default function Hospitals({ data }: { data: hospitalData[] }) {
-  const dataProp = data === null ? null : data[0];
   return (
     <ScrollView
       style={{
@@ -22,7 +21,7 @@ export default function Hospitals({ data }: { data: hospitalData[] }) {
         }}
       >
         {data.map((e, k) => (
-          <Hospital key={k} data={e} />
+          <Hospital key={k} data={e} onPress={() => console.log("hello")} />
         ))}
       </View>
     </ScrollView>

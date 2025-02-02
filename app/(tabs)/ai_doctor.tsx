@@ -1,5 +1,5 @@
 // ai_doctor.tsx
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -10,25 +10,29 @@ import {
   KeyboardAvoidingView,
   Platform,
   ActivityIndicator,
-} from 'react-native';
+} from "react-native";
 
-import hospitalData from '@/hospital_data.json';
+import hospitalData from "@/hospital_data.json";
 
 interface ChatMessage {
   id: number;
-  role: 'user' | 'assistant';
+  role: "user" | "assistant";
   content: string;
 }
 
-const OPENAI_API_KEY =
-  '';
-const USER_ORIGIN = 'Concordia University, Montreal, QC';
+const OPENAI_API_KEY = "";
+const USER_ORIGIN = "Concordia University, Montreal, QC";
 
-async function getTravelTime(origin: string, destination: string): Promise<number> {
-  const GOOGLE_API_KEY = '';
+async function getTravelTime(
+  origin: string,
+  destination: string
+): Promise<number> {
+  const GOOGLE_API_KEY = "";
   const url = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${encodeURIComponent(
     origin
-  )}&destinations=${encodeURIComponent(destination)}&mode=driving&key=${GOOGLE_API_KEY}`;
+  )}&destinations=${encodeURIComponent(
+    destination
+  )}&mode=driving&key=${GOOGLE_API_KEY}`;
   try {
     const response = await fetch(url);
     const data = await response.json();
@@ -37,42 +41,43 @@ async function getTravelTime(origin: string, destination: string): Promise<numbe
       data.rows[0] &&
       data.rows[0].elements &&
       data.rows[0].elements[0] &&
-      data.rows[0].elements[0].status === 'OK'
+      data.rows[0].elements[0].status === "OK"
     ) {
       return data.rows[0].elements[0].duration.value;
     } else {
-      console.warn('No valid travel data for destination:', destination);
+      console.warn("No valid travel data for destination:", destination);
       return Infinity;
     }
   } catch (e) {
-    console.error('Error fetching travel time: ', e);
+    console.error("Error fetching travel time: ", e);
     return Infinity;
   }
 }
 
 export default function ChatScreen(): JSX.Element {
-  const [conversationHistory, setConversationHistory] = useState<{ role: string; content: string }[]>([
+  const [conversationHistory, setConversationHistory] = useState<
+    { role: string; content: string }[]
+  >([
     {
-      role: 'system',
+      role: "system",
       content:
-        'You are a triage health assistant that helps users understand their symptoms and decide whether to seek medical care. Ask clarifying questions to gather more details. When hospital availability data is provided, please incorporate it into your responses. Assume the user is located at Concordia University in Montreal.',
+        "You are a triage health assistant that helps users understand their symptoms and decide whether to seek medical care. Ask clarifying questions to gather more details. When hospital availability data is provided, please incorporate it into your responses. Assume the user is located at Concordia University in Montreal.",
     },
   ]);
 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [input, setInput] = useState<string>('');
+  const [input, setInput] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
-  
   async function fetchHospitalAvailability(): Promise<string> {
     try {
       if (!Array.isArray(hospitalData) || hospitalData.length === 0) {
-        return 'No hospital data available.';
+        return "No hospital data available.";
       }
 
       // helper to convert a time string to seconds
       const convertTimeToSeconds = (timeStr: string): number => {
-        const parts = timeStr.split(':').map(Number);
+        const parts = timeStr.split(":").map(Number);
         if (parts.length === 2) {
           return parts[0] * 60 + parts[1];
         } else if (parts.length === 3) {
@@ -82,14 +87,20 @@ export default function ChatScreen(): JSX.Element {
       };
 
       const montrealHospitals = hospitalData.filter((hospital: any) =>
-        hospital.details.address.toLowerCase().includes('montreal')
+        hospital.details.address.toLowerCase().includes("montreal")
       );
-      const hospitalsToConsider = montrealHospitals.length > 0 ? montrealHospitals : hospitalData;
+      const hospitalsToConsider =
+        montrealHospitals.length > 0 ? montrealHospitals : hospitalData;
 
       const hospitalsWithScores = await Promise.all(
         hospitalsToConsider.map(async (hospital: any) => {
-          const travelTime = await getTravelTime(USER_ORIGIN, hospital.details.address);
-          const waitingTime = convertTimeToSeconds(hospital.details.estimated_waiting_time);
+          const travelTime = await getTravelTime(
+            USER_ORIGIN,
+            hospital.details.address
+          );
+          const waitingTime = convertTimeToSeconds(
+            hospital.details.estimated_waiting_time
+          );
           const compositeScore = waitingTime + 2 * travelTime;
           return { hospital, travelTime, waitingTime, compositeScore };
         })
@@ -103,36 +114,46 @@ export default function ChatScreen(): JSX.Element {
       topOptions.forEach((option, index) => {
         const travelTimeMinutes = Math.round(option.travelTime / 60);
         const waitingTimeMinutes = Math.round(option.waitingTime / 60);
-        responseText += `\n${index + 1}. ${option.hospital.name} at ${option.hospital.details.address}\n` +
-                        `   Driving time (one way): ~${travelTimeMinutes} minutes, round trip: ~${Math.round(2 * travelTimeMinutes)} minutes\n` +
-                        `   Estimated waiting time: ~${waitingTimeMinutes} hours\n` +
-                        `   Composite score: ${option.compositeScore} seconds\n`;
+        responseText +=
+          `\n${index + 1}. ${option.hospital.name} at ${
+            option.hospital.details.address
+          }\n` +
+          `   Driving time (one way): ~${travelTimeMinutes} minutes, round trip: ~${Math.round(
+            2 * travelTimeMinutes
+          )} minutes\n` +
+          `   Estimated waiting time: ~${waitingTimeMinutes} hours\n` +
+          `   Composite score: ${option.compositeScore} seconds\n`;
       });
       return responseText;
     } catch (error) {
-      console.error('Error processing hospital data:', error);
-      return 'Hospital data is currently unavailable.';
+      console.error("Error processing hospital data:", error);
+      return "Hospital data is currently unavailable.";
     }
   }
 
-  async function callAI(messagesForAPI: { role: string; content: string }[]): Promise<string | null> {
+  async function callAI(
+    messagesForAPI: { role: string; content: string }[]
+  ): Promise<string | null> {
     try {
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${OPENAI_API_KEY}`,
-        },
-        body: JSON.stringify({
-          model: 'gpt-4o-mini',
-          messages: messagesForAPI,
-        }),
-      });
+      const response = await fetch(
+        "https://api.openai.com/v1/chat/completions",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${OPENAI_API_KEY}`,
+          },
+          body: JSON.stringify({
+            model: "gpt-4o-mini",
+            messages: messagesForAPI,
+          }),
+        }
+      );
 
       if (!response.ok) {
         console.error(`HTTP error! Status: ${response.status}`);
         const errorData = await response.text();
-        console.error('Error details:', errorData);
+        console.error("Error details:", errorData);
         return null;
       }
 
@@ -144,56 +165,68 @@ export default function ChatScreen(): JSX.Element {
         data.choices[0].message.content;
       return aiMessage;
     } catch (error) {
-      console.error('Error calling the API:', error);
+      console.error("Error calling the API:", error);
       return null;
     }
   }
 
   const handleSend = async (): Promise<void> => {
     const trimmedInput = input.trim();
-    if (trimmedInput === '') return;
+    if (trimmedInput === "") return;
 
-    const userMessage = { role: 'user', content: trimmedInput };
-    const newUserMsg: ChatMessage = { id: Date.now(), role: 'user', content: trimmedInput };
+    const userMessage = { role: "user", content: trimmedInput };
+    const newUserMsg: ChatMessage = {
+      id: Date.now(),
+      role: "user",
+      content: trimmedInput,
+    };
 
     setMessages((prev) => [...prev, newUserMsg]);
     setConversationHistory((prev) => [...prev, userMessage]);
-    setInput('');
+    setInput("");
     setLoading(true);
 
     const lowerInput = trimmedInput.toLowerCase();
     let hospitalContext: { role: string; content: string }[] = [];
     if (
-      lowerInput.includes('hospital') ||
-      lowerInput.includes('bed') ||
-      lowerInput.includes('availability') ||
-      lowerInput.includes('emergency')
+      lowerInput.includes("hospital") ||
+      lowerInput.includes("bed") ||
+      lowerInput.includes("availability") ||
+      lowerInput.includes("emergency")
     ) {
       const hospitalDataStr = await fetchHospitalAvailability();
       hospitalContext = [
         {
-          role: 'system',
+          role: "system",
           content: `Additional context: Hospital availability data:\n${hospitalDataStr}`,
         },
       ];
       setConversationHistory((prev) => [...prev, ...hospitalContext]);
     }
 
-    const conversationForAPI = [...conversationHistory, ...hospitalContext, userMessage];
+    const conversationForAPI = [
+      ...conversationHistory,
+      ...hospitalContext,
+      userMessage,
+    ];
 
     const aiResponse = await callAI(conversationForAPI);
     setLoading(false);
     if (aiResponse) {
-      const assistantMessage = { role: 'assistant', content: aiResponse };
-      const newAssistantMsg: ChatMessage = { id: Date.now() + 1, role: 'assistant', content: aiResponse };
+      const assistantMessage = { role: "assistant", content: aiResponse };
+      const newAssistantMsg: ChatMessage = {
+        id: Date.now() + 1,
+        role: "assistant",
+        content: aiResponse,
+      };
 
       setConversationHistory((prev) => [...prev, assistantMessage]);
       setMessages((prev) => [...prev, newAssistantMsg]);
     } else {
       const errorMsg: ChatMessage = {
         id: Date.now() + 1,
-        role: 'assistant',
-        content: 'Sorry, something went wrong. Please try again.',
+        role: "assistant",
+        content: "Sorry, something went wrong. Please try again.",
       };
       setMessages((prev) => [...prev, errorMsg]);
     }
@@ -202,7 +235,7 @@ export default function ChatScreen(): JSX.Element {
   return (
     <KeyboardAvoidingView
       style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
       keyboardVerticalOffset={80}
     >
       <ScrollView
@@ -215,7 +248,9 @@ export default function ChatScreen(): JSX.Element {
             key={message.id}
             style={[
               styles.messageBubble,
-              message.role === 'assistant' ? styles.assistantBubble : styles.userBubble,
+              message.role === "assistant"
+                ? styles.assistantBubble
+                : styles.userBubble,
             ]}
           >
             <Text style={styles.messageText}>{message.content}</Text>
@@ -242,8 +277,10 @@ export default function ChatScreen(): JSX.Element {
 
 const styles = StyleSheet.create({
   container: {
+    height: 200,
     flex: 1,
-    backgroundColor: '#f0f4f7',
+    backgroundColor: "#f0f4f7",
+    paddingBottom: 100,
   },
   messagesContainer: {
     flex: 1,
@@ -251,35 +288,35 @@ const styles = StyleSheet.create({
   },
   messagesContent: {
     flexGrow: 1,
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end",
   },
   messageBubble: {
     padding: 10,
     borderRadius: 15,
     marginBottom: 10,
-    maxWidth: '80%',
+    maxWidth: "80%",
   },
   userBubble: {
-    alignSelf: 'flex-end',
-    backgroundColor: '#dcf8c6',
+    alignSelf: "flex-end",
+    backgroundColor: "#dcf8c6",
   },
   assistantBubble: {
-    alignSelf: 'flex-start',
-    backgroundColor: '#fff',
+    alignSelf: "flex-start",
+    backgroundColor: "#fff",
   },
   messageText: {
     fontSize: 16,
-    color: '#333',
+    color: "#333",
   },
   inputContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     padding: 10,
-    backgroundColor: '#e9ecef',
-    alignItems: 'center',
+    backgroundColor: "#e9ecef",
+    alignItems: "center",
   },
   input: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 20,
     paddingHorizontal: 15,
     paddingVertical: 10,
@@ -287,13 +324,13 @@ const styles = StyleSheet.create({
   },
   sendButton: {
     marginLeft: 10,
-    backgroundColor: '#007bff',
+    backgroundColor: "#007bff",
     borderRadius: 20,
     paddingHorizontal: 15,
     paddingVertical: 10,
   },
   sendButtonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
   },
 });

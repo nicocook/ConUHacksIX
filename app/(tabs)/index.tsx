@@ -2,7 +2,7 @@ import Hospitals from "@/components/home/hospitals";
 import SearchBar from "@/components/home/searchbar";
 import { Text, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { data } from "@/WebScraper/Hospitals_Data";
+import { data } from "@/hospital_data";
 
 export default function Index() {
   return (

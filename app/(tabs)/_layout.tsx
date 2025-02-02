@@ -2,7 +2,12 @@ import { Tabs } from "expo-router";
 import React from "react";
 import { Platform } from "react-native";
 
-import { CalendarClock, Hospital, Sparkles } from "lucide-react-native";
+import {
+  CalendarClock,
+  Hospital,
+  PersonStanding,
+  Sparkles,
+} from "lucide-react-native";
 
 export default function TabLayout() {
   return (
@@ -42,6 +47,13 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <Sparkles color={color} />,
         }}
       />
+      {/* <Tabs.Screen
+        name="settings"
+        options={{
+          title: "Settings",
+          tabBarIcon: ({ color }) => <PersonStanding color={color} />,
+        }}
+      /> */}
     </Tabs>
   );
 }
