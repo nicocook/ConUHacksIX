@@ -14,7 +14,8 @@ export default function Hospital({
     return <View />;
   }
 
-  const [waitHours, waitMinutes] = data.details.estimated_waiting_time.split(":");
+  const [waitHours, waitMinutes] =
+    data.details.estimated_waiting_time.split(":");
 
   return (
     <Pressable onPress={onPress}>
@@ -66,6 +67,7 @@ export default function Hospital({
           style={{
             flexDirection: "row",
             justifyContent: "space-evenly",
+            gap: 10,
           }}
         >
           {/* Travel time/distance field */}
@@ -73,7 +75,7 @@ export default function Hospital({
             style={{
               flexDirection: "row",
               alignItems: "center",
-              gap: 10,
+              gap: 3,
             }}
           >
             <CornerUpRight color={"black"} />
@@ -90,7 +92,7 @@ export default function Hospital({
             style={{
               flexDirection: "row",
               alignItems: "center",
-              gap: 10,
+              gap: 3,
             }}
           >
             <Clock color={"black"} />
@@ -106,7 +108,7 @@ export default function Hospital({
             alignSelf: "center",
             flexDirection: "row",
             alignItems: "center",
-            gap: 10,
+            gap: 3,
             backgroundColor:
               +data.details.stretcher_occupancy_rate.split("%")[0] >= 100
                 ? "#fee2e2"

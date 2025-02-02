@@ -1,9 +1,14 @@
 import React from "react";
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import { hospitalData } from "./types";
 
-export default function HospitalOverview() {
+export default function HospitalOverview({
+  hospitalData,
+}: {
+  hospitalData: hospitalData;
+}) {
   return (
-    <View
+    <ScrollView
       style={{
         flex: 1,
         backgroundColor: "#fff",
@@ -27,7 +32,7 @@ export default function HospitalOverview() {
             textAlign: "center",
           }}
         >
-          HOSPITAL NAME
+          {hospitalData.name}
         </Text>
 
         {/* Address */}
@@ -40,7 +45,7 @@ export default function HospitalOverview() {
             marginTop: 5,
           }}
         >
-          1000 rue Saint-Denis, Montréal, H2X 0A9
+          {hospitalData.details.address}
         </Text>
 
         {/* Buttons for Map & Website */}
@@ -128,7 +133,7 @@ export default function HospitalOverview() {
                 textAlign: "center",
               }}
             >
-              180%
+              {hospitalData.details.stretcher_occupancy_rate}
             </Text>
             <Text
               style={{
@@ -159,7 +164,10 @@ export default function HospitalOverview() {
                 textAlign: "center",
               }}
             >
-              4h15
+              {+hospitalData.details.estimated_waiting_time.split(":")[0] +
+                "h" +
+                hospitalData.details.estimated_waiting_time.split(":")[1] +
+                "min"}
             </Text>
             <Text
               style={{
@@ -193,7 +201,7 @@ export default function HospitalOverview() {
                 textAlign: "center",
               }}
             >
-              7 people
+              {hospitalData.details.people_waiting_to_see_doctor + " people"}
             </Text>
             <Text
               style={{
@@ -226,7 +234,7 @@ export default function HospitalOverview() {
                 textAlign: "center",
               }}
             >
-              17 people
+              {hospitalData.details.total_people_in_emergency_room + " people"}
             </Text>
             <Text
               style={{
@@ -241,7 +249,7 @@ export default function HospitalOverview() {
           </View>
 
           {/* Card 4: Total in Emergency Room */}
-          <View
+          {/* <View
             style={{
               width: "47%",
               backgroundColor: "#1E3A8A",
@@ -259,7 +267,7 @@ export default function HospitalOverview() {
                 textAlign: "center",
               }}
             >
-              3 people
+              {hospitalData.details.people_waiting_to_see_doctor + " people"}
             </Text>
             <Text
               style={{
@@ -271,9 +279,9 @@ export default function HospitalOverview() {
               waiting for emergeny room
             </Text>
             <Text style={{ color: "white" }}></Text>
-          </View>
+          </View> */}
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }

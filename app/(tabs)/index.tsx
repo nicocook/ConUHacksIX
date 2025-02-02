@@ -12,9 +12,20 @@ import {
 } from "@/components/ui/actionsheet";
 import HospitalOverview from "@/components/home/hospital_overview";
 import { useState } from "react";
+import HospitalDrawer from "@/components/home/hospital_drawer";
 
 export default function Index() {
   const [showActionsheet, setShowActionsheet] = useState(false);
+  const [hospitalData, setHospitalData] = useState({
+    name: "",
+    details: {
+      address: "",
+      estimated_waiting_time: "",
+      people_waiting_to_see_doctor: "",
+      total_people_in_emergency_room: "",
+      stretcher_occupancy_rate: "",
+    },
+  });
   const handleClose = () => setShowActionsheet(false);
   return (
     <View
@@ -27,18 +38,16 @@ export default function Index() {
       }}
     >
       <SearchBar />
-      <Hospitals data={data} onPress={() => setShowActionsheet(true)} />
-      <Actionsheet isOpen={showActionsheet} onClose={handleClose}>
-        <ActionsheetBackdrop />
-        <ActionsheetContent>
-          <ActionsheetDragIndicatorWrapper>
-            <ActionsheetDragIndicator />
-          </ActionsheetDragIndicatorWrapper>
-          <View className="h-5/6">
-            <HospitalOverview />
-          </View>
-        </ActionsheetContent>
-      </Actionsheet>
+      <Hospitals
+        data={data}
+        onPress={() => setShowActionsheet(true)}
+        setHospitalData={setHospitalData}
+      />
+      <HospitalDrawer
+        showActionsheet={showActionsheet}
+        handleClose={handleClose}
+        hospitalData={hospitalData}
+      />
     </View>
   );
 }

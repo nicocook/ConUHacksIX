@@ -1,11 +1,36 @@
 import { View, Text, Pressable } from "react-native";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
+import {
+  Actionsheet,
+  ActionsheetBackdrop,
+  ActionsheetContent,
+  ActionsheetDragIndicator,
+  ActionsheetDragIndicatorWrapper,
+} from "../ui/actionsheet";
+import HospitalOverview from "./hospital_overview";
+import { hospitalData } from "./types";
 
-export default function HospitalDrawer() {
+export default function HospitalDrawer({
+  showActionsheet,
+  handleClose,
+  hospitalData,
+}: {
+  showActionsheet: boolean;
+  handleClose: () => void;
+  hospitalData: hospitalData;
+}) {
   return (
-    <View>
-      <Text>hello</Text>
-    </View>
+    <Actionsheet isOpen={showActionsheet} onClose={handleClose}>
+      <ActionsheetBackdrop />
+      <ActionsheetContent>
+        <ActionsheetDragIndicatorWrapper>
+          <ActionsheetDragIndicator />
+        </ActionsheetDragIndicatorWrapper>
+        <View className="h-5/6">
+          <HospitalOverview hospitalData={hospitalData} />
+        </View>
+      </ActionsheetContent>
+    </Actionsheet>
   );
 }
 

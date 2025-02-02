@@ -23,10 +23,10 @@ const addDistanceUsingGoogle = async (
         const url = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${origin}&destinations=${encodeURIComponent(
           destination
         )}&key=${GOOGLE_API_KEY}`;
-        console.log("Distance Matrix API URL:", url);
+        // console.log("Distance Matrix API URL:", url);
         const response = await fetch(url);
         const json = await response.json();
-        console.log("Distance Matrix API response:", json);
+        // console.log("Distance Matrix API response:", json);
         if (
           json.status === "OK" &&
           json.rows &&
@@ -70,9 +70,11 @@ const addDistanceUsingGoogle = async (
 export default function Hospitals({
   data,
   onPress,
+  setHospitalData,
 }: {
   data: hospitalData[];
   onPress: () => void;
+  setHospitalData: React.Dispatch<React.SetStateAction<hospitalData>>;
 }) {
   const [hospitals, setHospitals] = useState<hospitalData[]>(data);
   const [loading, setLoading] = useState<boolean>(true);
@@ -121,7 +123,14 @@ export default function Hospitals({
         }}
       >
         {hospitals.map((e, k) => (
-          <Hospital key={k} data={e} onPress={onPress} />
+          <Hospital
+            key={k}
+            data={e}
+            onPress={() => {
+              setHospitalData(e);
+              onPress();
+            }}
+          />
         ))}
       </View>
     </ScrollView>
