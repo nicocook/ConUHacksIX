@@ -6,7 +6,10 @@ import { hospitalData } from "./types";
 
 const GOOGLE_API_KEY = "AIzaSyBDvAj0mGQsInOZBsOls8pCqjRcvp2lQK4";
 
-const addDistanceUsingGoogle = async (data: hospitalData[], userLoc: { latitude: number; longitude: number; }) => {
+const addDistanceUsingGoogle = async (
+  data: hospitalData[],
+  userLoc: { latitude: number; longitude: number }
+) => {
   return Promise.all(
     data.map(async (hospital) => {
       try {
@@ -64,7 +67,13 @@ const addDistanceUsingGoogle = async (data: hospitalData[], userLoc: { latitude:
   );
 };
 
-export default function Hospitals({ data }: { data: hospitalData[] }) {
+export default function Hospitals({
+  data,
+  onPress,
+}: {
+  data: hospitalData[];
+  onPress: () => void;
+}) {
   const [hospitals, setHospitals] = useState<hospitalData[]>(data);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -105,9 +114,14 @@ export default function Hospitals({ data }: { data: hospitalData[] }) {
         borderTopEndRadius: 25,
       }}
     >
-      <View style={{ flexDirection: "column", gap: 10 }}>
+      <View
+        style={{
+          flexDirection: "column",
+          gap: 10,
+        }}
+      >
         {hospitals.map((e, k) => (
-          <Hospital key={k} data={e} />
+          <Hospital key={k} data={e} onPress={onPress} />
         ))}
       </View>
     </ScrollView>

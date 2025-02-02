@@ -12,7 +12,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 
-import hospitalData from "@/hospital_data.json";
+import { data } from "@/hospital_data";
 
 interface ChatMessage {
   id: number;
@@ -71,7 +71,7 @@ export default function ChatScreen(): JSX.Element {
 
   async function fetchHospitalAvailability(): Promise<string> {
     try {
-      if (!Array.isArray(hospitalData) || hospitalData.length === 0) {
+      if (!Array.isArray(data) || data.length === 0) {
         return "No hospital data available.";
       }
 
@@ -86,11 +86,11 @@ export default function ChatScreen(): JSX.Element {
         return 0;
       };
 
-      const montrealHospitals = hospitalData.filter((hospital: any) =>
+      const montrealHospitals = data.filter((hospital: any) =>
         hospital.details.address.toLowerCase().includes("montreal")
       );
       const hospitalsToConsider =
-        montrealHospitals.length > 0 ? montrealHospitals : hospitalData;
+        montrealHospitals.length > 0 ? montrealHospitals : data;
 
       const hospitalsWithScores = await Promise.all(
         hospitalsToConsider.map(async (hospital: any) => {
@@ -194,11 +194,11 @@ export default function ChatScreen(): JSX.Element {
       lowerInput.includes("availability") ||
       lowerInput.includes("emergency")
     ) {
-      const hospitalDataStr = await fetchHospitalAvailability();
+      const dataStr = await fetchHospitalAvailability();
       hospitalContext = [
         {
           role: "system",
-          content: `Additional context: Hospital availability data:\n${hospitalDataStr}`,
+          content: `Additional context: Hospital availability data:\n${dataStr}`,
         },
       ];
       setConversationHistory((prev) => [...prev, ...hospitalContext]);
@@ -233,45 +233,47 @@ export default function ChatScreen(): JSX.Element {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
-      keyboardVerticalOffset={80}
-    >
-      <ScrollView
-        style={styles.messagesContainer}
-        contentContainerStyle={styles.messagesContent}
-        keyboardShouldPersistTaps="handled"
+    <View className="h-screen">
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+        keyboardVerticalOffset={80}
       >
-        {messages.map((message: ChatMessage) => (
-          <View
-            key={message.id}
-            style={[
-              styles.messageBubble,
-              message.role === "assistant"
-                ? styles.assistantBubble
-                : styles.userBubble,
-            ]}
-          >
-            <Text style={styles.messageText}>{message.content}</Text>
-          </View>
-        ))}
-        {loading && <ActivityIndicator size="small" color="#007bff" />}
-      </ScrollView>
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Type a message..."
-          value={input}
-          onChangeText={setInput}
-          onSubmitEditing={handleSend}
-          returnKeyType="send"
-        />
-        <TouchableOpacity style={styles.sendButton} onPress={handleSend}>
-          <Text style={styles.sendButtonText}>Send</Text>
-        </TouchableOpacity>
-      </View>
-    </KeyboardAvoidingView>
+        <ScrollView
+          style={styles.messagesContainer}
+          contentContainerStyle={styles.messagesContent}
+          keyboardShouldPersistTaps="handled"
+        >
+          {messages.map((message: ChatMessage) => (
+            <View
+              key={message.id}
+              style={[
+                styles.messageBubble,
+                message.role === "assistant"
+                  ? styles.assistantBubble
+                  : styles.userBubble,
+              ]}
+            >
+              <Text style={styles.messageText}>{message.content}</Text>
+            </View>
+          ))}
+          {loading && <ActivityIndicator size="small" color="#007bff" />}
+        </ScrollView>
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Type a message..."
+            value={input}
+            onChangeText={setInput}
+            onSubmitEditing={handleSend}
+            returnKeyType="send"
+          />
+          <TouchableOpacity style={styles.sendButton} onPress={handleSend}>
+            <Text style={styles.sendButtonText}>Send</Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
+    </View>
   );
 }
 
@@ -280,7 +282,8 @@ const styles = StyleSheet.create({
     height: 200,
     flex: 1,
     backgroundColor: "#f0f4f7",
-    paddingBottom: 100,
+    //borderWidth: 2,
+    //marginBottom: 84,
   },
   messagesContainer: {
     flex: 1,
