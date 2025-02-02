@@ -1,4 +1,4 @@
-type hospitalData = {
+export type hospitalData = {
   name: string;
   details: {
     address: string;
@@ -7,6 +7,10 @@ type hospitalData = {
     total_people_in_emergency_room: string;
     stretcher_occupancy_rate: string;
   };
+  // Optional fields to be added after calculating distance/time using the Google API
+  distance?: number;
+  travelTime?: string | null;
+  travelTimeValue?: number;
 };
 
 // {
