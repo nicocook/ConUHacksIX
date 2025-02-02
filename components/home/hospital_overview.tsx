@@ -42,23 +42,23 @@ export default function HospitalOverview({
   // Determine load color
   const getLoadColor = (rate: number) => {
     if (rate > 120) {
-      return "red"; // heavy
+      return "red"; 
     } else if (rate >= 80 && rate <= 120) {
-      return "orange"; // moderate
+      return "orange"; 
     } else {
-      return "green"; // low
+      return "green";
     }
   };
 
   const loadStatus = getLoadStatus(occupancyRateNumeric);
   const loadColor = getLoadColor(occupancyRateNumeric);
 
-  // 1) Create animated values for scale and opacity
+  //Create animated values for scale and opacity
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const opacityAnim = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
-    // 2) Create a pulsing animation that changes both scale and opacity in parallel
+    //Create a pulsing animation
     Animated.loop(
       Animated.sequence([
         Animated.parallel([
@@ -91,7 +91,6 @@ export default function HospitalOverview({
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: "#fff" }}>
-      {/* Top Header Section (Dark Blue Background) */}
       <View
         style={{
           backgroundColor: "#22417F",
@@ -192,7 +191,6 @@ export default function HospitalOverview({
 
         {/* Cards Container (2 x 2) */}
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 10 }}>
-          {/* Card 1: Hospital Capacity */}
           <View
             style={{
               width: "47%",
@@ -204,9 +202,9 @@ export default function HospitalOverview({
             <Text
               style={{
                 color: "white",
-                fontSize: 26,
+                fontSize: 50,
                 fontWeight: "700",
-                height: 38,
+                height: 75,
                 textAlign: "center",
               }}
             >
@@ -236,23 +234,22 @@ export default function HospitalOverview({
             <Text
               style={{
                 color: "white",
-                fontSize: 26,
+                fontSize: 40,
                 fontWeight: "700",
-                height: 38,
+                height: 75,
                 textAlign: "center",
+                marginBottom: -2
+
               }}
             >
-              {+hospitalData.details.estimated_waiting_time.split(":")[0] +
-                "h" +
-                hospitalData.details.estimated_waiting_time.split(":")[1] +
-                "min"}
+              {hospitalData.details.estimated_waiting_time}
             </Text>
             <Text
               style={{
                 color: "white",
                 textAlign: "center",
                 fontSize: 20,
-                marginBottom: 10,
+                marginBottom: 5,
               }}
             >
               Average wait time
@@ -271,17 +268,17 @@ export default function HospitalOverview({
             <Text
               style={{
                 color: "white",
-                fontSize: 26,
+                fontSize: 40,
                 fontWeight: "700",
-                marginBottom: 5,
-                height: 38,
+                marginBottom: 1,
+                height: 50,
                 textAlign: "center",
               }}
             >
-              {hospitalData.details.people_waiting_to_see_doctor + " people"}
+              {hospitalData.details.people_waiting_to_see_doctor}
             </Text>
             <Text style={{ color: "white", textAlign: "center", fontSize: 20 }}>
-              waiting to see a doctor
+               people waiting to see a doctor
             </Text>
           </View>
 
@@ -297,17 +294,17 @@ export default function HospitalOverview({
             <Text
               style={{
                 color: "white",
-                fontSize: 26,
+                fontSize: 40,
                 fontWeight: "700",
-                marginBottom: 5,
-                height: 38,
+                marginBottom: 1,
+                height: 50,
                 textAlign: "center",
               }}
             >
-              {hospitalData.details.total_people_in_emergency_room + " people"}
+              {hospitalData.details.total_people_in_emergency_room}
             </Text>
             <Text style={{ color: "white", textAlign: "center", fontSize: 20 }}>
-              in emergency rooms
+               people in emergency rooms
             </Text>
           </View>
         </View>
