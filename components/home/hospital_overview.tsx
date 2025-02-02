@@ -7,6 +7,34 @@ export default function HospitalOverview({
 }: {
   hospitalData: hospitalData;
 }) {
+
+  const occupancyRateNumeric = parseFloat(
+    hospitalData.details.stretcher_occupancy_rate.replace("%", "")
+  );
+  
+
+  // 2. Create a function or inline logic to pick the status
+  const getLoadStatus = (rate: number) => {
+    if (rate > 120) {
+      return "heavy load";
+    } else if (rate >= 80 && rate <= 120) {
+      return "moderate load";
+    } else {
+      return "low load";
+    }
+  };
+
+  const getLoadColor = (rate: number) => {
+    if (rate > 120) {
+      return "red";     // heavy
+    } else if (rate >= 80 && rate <= 120) {
+      return "orange";  // moderate
+    } else {
+      return "green";   // low
+    }
+  };
+  const loadColor = getLoadColor(occupancyRateNumeric);
+
   return (
     <ScrollView
       style={{
@@ -106,12 +134,13 @@ export default function HospitalOverview({
         </Text>
         <Text
           style={{
-            fontSize: 12,
-            fontWeight: "600",
+            fontSize: 14,
+            fontWeight: "bold",
             marginBottom: 20,
+            color: loadColor
           }}
         >
-          Hospital is experiencing
+          Hospital is experiencing {getLoadStatus(occupancyRateNumeric)}.
         </Text>
         {/* Cards Container (2 x 2) */}
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 10 }}>
