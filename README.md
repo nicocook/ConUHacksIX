@@ -1,5 +1,7 @@
 # ConUHacksIX
 
+This app enhances the emergency room experience by providing real-time hospital and ER information across Quebec. The Home tab displays data for nearby hospitals: estimated waiting times, stretcher availability, hospital capacity, and more. Another tab features an AI-powered personal assistant that conducts a triage by asking relevant questions, offering follow-up queries, and delivering personalized recommendations on nearby hospitals based on current location. Additionally, the Emergency Resources tab offers a one click solution to access essential call lines for dire situations, such as the Quebec Poison Control Centre, emergency shelters, and more.
+
 ## Welcome to your Expo app 👋
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
